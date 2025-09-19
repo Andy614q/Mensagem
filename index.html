@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mensagem Especial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #ffd6e8, #ffcce0);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+      padding: 20px;
+    }  
+    .titulo {
+      font-weight: 700;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #ff0066;
+      margin-bottom: 15px;
+      animation: fadeIn 1s ease;
+      z-index: 2;
+    }
+    .mensagem {
+      opacity: 0;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #333;
+      line-height: 1.6;
+      font-weight: 500;
+      margin-top: 15px;
+      max-width: 90%;
+      min-height: 120px;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+    .assinatura {
+      opacity: 0;
+      font-weight: 700;
+      font-size: 20px;
+      color: #444;
+      margin-top: 20px;
+      transition: opacity 0.8s ease;
+      z-index: 2;
+    }
+    button {
+      margin-top: 20px;
+      background: #ff0066;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      text-transform: uppercase;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    /* corações fixos */
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.9;
+      z-index: 10;
+    }
+    .big-heart {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 120px;
+      color: #ff0066;
+      animation: pulse 0.8s infinite alternate;
+      z-index: 999;
+      display: none;
+    }
+    @keyframes pulse {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(-50%, -50%) scale(1.3); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="hearts-container"></div>
+
+  <div class="titulo">VOCÊ É INCRÍVEL! 💌</div>
+  <button onclick="showMessage()">Clique aqui</button>
+  <p class="mensagem" id="mensagem"></p>
+  <div class="assinatura" id="assinatura">De Detroit para Jade</div>
+  <button id="btnCoracoes" style="display:none;" onclick="showBigHeart()">Clique aqui de novo 💖</button>
+  <div class="big-heart" id="bigHeart">❤️</div>
+
+  <!-- Música de fundo -->
+  <audio id="musica" src="Perfect.mp3" loop></audio>
+
+  <script>
+    const text = "Sei que tô atrasado nos parabéns, mas nunca é tarde pra desejar felicidade a alguém que faz diferença na minha vida. ❤️\n\nMinha duo, desejo que cada dia seu seja cheio de conquistas e sorrisos, assim como você me faz sentir quando estamos juntos. 💕";
+    const cores = ["#ff0066", "#ff4081", "#ff80ab", "#d500f9", "#c51162", "#ad1457"];
+
+    function showMessage() {
+      document.querySelector("button").style.display = "none";
+      const mensagem = document.getElementById("mensagem");
+      mensagem.style.opacity = 1;
+
+      // inicia a música ao clicar
+      document.getElementById('musica').play();
+
+      let i = 0;
+      const interval = setInterval(() => {
+        mensagem.textContent += text[i];
+        i++;
+        if (i === text.length) {
+          clearInterval(interval);
+          document.getElementById("assinatura").style.opacity = 1;
+          document.getElementById("btnCoracoes").style.display = "inline-block";
+        }
+      }, 50);
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = Math.random() * 100 + "vh";
+      heart.style.fontSize = (20 + Math.random() * 40) + "px";
+      heart.style.color = cores[Math.floor(Math.random() * cores.length)];
+      document.getElementById("hearts-container").appendChild(heart);
+    }
+
+    function showBigHeart() {
+      const bigHeart = document.getElementById("bigHeart");
+      bigHeart.style.display = "block";
+
+      setTimeout(() => {
+        bigHeart.style.display = "none";
+
+        let quantidade = 0;
+        const interval = setInterval(() => {
+          createHeart();
+          quantidade++;
+          if (quantidade > 200) clearInterval(interval); // cobre a tela toda
+        }, 20);
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
