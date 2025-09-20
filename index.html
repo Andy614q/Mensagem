@@ -4,39 +4,203 @@
   <meta charset="UTF-8">
   <title>Resultados das Pedras</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #1E1E3F; /* Fundo azul escuro */
+      color: #fff; /* Texto branco */
+    }
+
+    /* Lista de resultados */
     ul { list-style: none; padding: 0; }
-    li { margin: 8px 0; font-size: 18px; display: flex; align-items: center; }
-    .hora { font-weight: bold; width: 60px; }
-    .pedra { margin: 0 8px; }
-    .resultado { margin-left: 12px; font-size: 20px; width: 40px; text-align: center; }
-    .botoes { margin-left: 20px; }
-    button { 
-      font-size: 20px; 
-      padding: 5px 12px; 
-      margin-left: 8px; 
-      cursor: pointer;
+    li { margin: 16px 0; font-size: 28px; display: flex; align-items: center; }
+    .hora { font-weight: bold; width: 90px; font-size: 28px; }
+    .pedra { margin: 0 14px; font-size: 28px; }
+    .resultado { margin-left: 18px; font-size: 32px; width: 60px; text-align: center; }
+    .botoes { margin-left: 24px; }
+    button { font-size: 26px; padding: 10px 20px; margin-left: 12px; cursor: pointer; border-radius: 10px; }
+
+    /* Tela de login */
+    #login { 
+      text-align:center; 
+      margin-top:60px; 
+      max-width: 450px; 
+      margin-left: auto; 
+      margin-right: auto; 
+    }
+    #login input { 
+      font-size: 26px; 
+      padding:14px; 
+      margin:12px 0; 
+      width: 100%; 
+      border-radius: 10px; 
+      border: 1px solid #999; 
+      background-color: #fff; 
+      color: #000; 
+    }
+    #login button { 
+      font-size: 28px; 
+      padding: 12px 24px; 
+      margin-top: 12px; 
+      cursor:pointer; 
+      border-radius: 10px; 
+      background-color: #FF4C4C; 
+      color: #fff; 
+      border: none;
+    }
+
+    #preview { 
+      margin-top: 40px; 
+      text-align:center; 
+      display:inline-block; 
+      font-size: 26px; 
+      width: 100%;
+    }
+    #preview h3 { font-size: 30px; color: #FFD700; }
+    #preview li { font-size: 28px; margin: 14px 0; }
+
+    /* Descrição abaixo da pré-visualização */
+    #descricao {
+      font-size: 26px;
+      color: #FFD700;
+      margin-top: 24px;
+      max-width: 90%;
+      text-align: center;
+      line-height: 1.6;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Botão sair */
+    #sair { 
+      font-size: 24px; 
+      margin-bottom: 24px; 
+      padding: 10px 20px; 
+      cursor: pointer; 
+      border-radius: 10px; 
+      background-color: #FF4C4C; 
+      color: #fff; 
+      border: none;
+    }
+
+    /* Conteúdo protegido */
+    #conteudo { padding: 24px; }
+
+    /* Relógio fixo no canto direito */
+    #relogio {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 28px;
+      color: #FFD700;
+      font-weight: bold;
+      background-color: rgba(0,0,0,0.4);
+      padding: 10px 16px;
+      border-radius: 12px;
+      z-index: 1000;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      box-shadow: 0 0 10px #000;
+      display: none; /* Fica escondido antes do login */
     }
   </style>
 </head>
 <body>
-  <h2>Resultados das pedras:</h2>
-  <ul id="lista"></ul>
+
+  <!-- Relógio fixo -->
+  <div id="relogio"></div>
+
+  <!-- Tela de Login -->
+  <div id="login">
+    <h2 style="font-size:36px;">Login</h2>
+    <input type="text" id="usuario" placeholder="Usuário"><br>
+    <input type="password" id="senha" placeholder="Senha"><br><br>
+    <button onclick="fazerLogin()">Entrar</button>
+    <p id="erro" style="color:red; font-size: 22px;"></p>
+
+    <div id="preview">
+      <h3>Pré-visualização de resultados:</h3>
+      <ul id="previewLista"></ul>
+      <p id="descricao">
+        Descubra os resultados das pedras em tempo real, com informações claras, organizadas e sempre atualizadas. Ideal para quem não quer perder nenhum detalhe do jogo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Conteúdo protegido -->
+  <div id="conteudo" style="display:none;">
+    <button id="sair" onclick="sair()">🔙 Sair</button>
+    <h2>Resultados das pedras:</h2>
+    <ul id="lista"></ul>
+  </div>
 
   <script>
-    let lista = document.getElementById("lista");
+    const USUARIO = "Detroit";
+    const SENHA = "Detroit11";
 
+    // Função para atualizar o relógio
+    function atualizarRelogio() {
+      const agora = new Date();
+      const h = String(agora.getHours()).padStart(2,'0');
+      const m = String(agora.getMinutes()).padStart(2,'0');
+      const s = String(agora.getSeconds()).padStart(2,'0');
+      document.getElementById("relogio").innerText = `${h}:${m}:${s}`;
+    }
+
+    // Atualiza o relógio a cada segundo
+    setInterval(atualizarRelogio, 1000);
+
+    // Mostrar relógio depois do login
+    function mostrarRelogio() {
+      document.getElementById("relogio").style.display = "block";
+    }
+
+    window.onload = function() {
+      gerarPreview();
+      if(localStorage.getItem("logado") === "true"){
+        document.getElementById("login").style.display = "none";
+        document.getElementById("conteudo").style.display = "block";
+        gerarSequencia();
+        mostrarRelogio();
+      }
+    }
+
+    function fazerLogin() {
+      let u = document.getElementById("usuario").value;
+      let s = document.getElementById("senha").value;
+      let erro = document.getElementById("erro");
+
+      if (u === USUARIO && s === SENHA) {
+        localStorage.setItem("logado", "true");
+        document.getElementById("login").style.display = "none";
+        document.getElementById("conteudo").style.display = "block";
+        gerarSequencia(); 
+        mostrarRelogio(); // exibe o relógio
+      } else {
+        erro.innerText = "Usuário ou senha incorretos!";
+      }
+    }
+
+    function sair() {
+      localStorage.removeItem("logado");
+      document.getElementById("conteudo").style.display = "none";
+      document.getElementById("login").style.display = "block";
+      document.getElementById("relogio").style.display = "none";
+      gerarPreview();
+    }
+
+    let lista = document.getElementById("lista");
     function gerarSequencia() {
       lista.innerHTML = "";
       let agora = new Date();
       let hora = agora.getHours();
       let minutos = agora.getMinutes();
 
-      for (let i = 1; i <= 50; i++) { // gera 50 linhas (pode aumentar)
+      for (let i = 1; i <= 50; i++) { 
         let totalMinutos = minutos + i;
         let novaHora = hora + Math.floor(totalMinutos / 60);
         let novosMinutos = totalMinutos % 60;
-
         novaHora = novaHora % 24;
         let horaFormatada = novaHora.toString().padStart(2, '0');
         let minutosFormatados = novosMinutos.toString().padStart(2, '0');
@@ -44,7 +208,6 @@
         let pedraNumero = ((i - 1) % 12) + 1;
         let pedraSimbolo = pedraNumero <= 8 ? "🔴⚪️" : "⚫️⚪️";
 
-        // cria o item
         let li = document.createElement("li");
         li.innerHTML = `
           <span class="hora">${horaFormatada}:${minutosFormatados}</span> →
@@ -59,18 +222,40 @@
       }
     }
 
-    // Função para marcar os resultados
-    function marcar(botao, tipo) {
-      let resultadoSpan = botao.parentElement.parentElement.querySelector(".resultado");
+    function gerarPreview() {
+      let previewLista = document.getElementById("previewLista");
+      previewLista.innerHTML = "";
+      let agora = new Date();
+      let hora = agora.getHours();
+      let minutos = agora.getMinutes();
+      let intervalos = [15, 25, 35, 45];
 
-      if (tipo === "acerto") {
-        resultadoSpan.innerText = "✅";
-      } else if (tipo === "erro") {
-        resultadoSpan.innerText = "❌";
-      }
+      intervalos.forEach((inc, index) => {
+        let totalMinutos = minutos + inc;
+        let novaHora = hora + Math.floor(totalMinutos / 60);
+        let novosMinutos = totalMinutos % 60;
+        novaHora = novaHora % 24;
+
+        let horaFormatada = novaHora.toString().padStart(2, '0');
+        let minutosFormatados = novosMinutos.toString().padStart(2, '0');
+
+        let pedraNumero = ((index) % 12) + 1;
+        let pedraSimbolo = pedraNumero <= 8 ? "🔴⚪️" : "⚫️⚪️";
+
+        let li = document.createElement("li");
+        li.innerHTML = `
+          <span class="hora">${horaFormatada}:${minutosFormatados}</span> →
+          <span class="pedra">${pedraSimbolo}</span>
+          <span class="resultado">⏳</span>
+        `;
+        previewLista.appendChild(li);
+      });
     }
 
-    gerarSequencia();
+    function marcar(botao, tipo) {
+      let resultadoSpan = botao.parentElement.parentElement.querySelector(".resultado");
+      resultadoSpan.innerText = tipo === "acerto" ? "✅" : "❌";
+    }
   </script>
 </body>
 </html>
