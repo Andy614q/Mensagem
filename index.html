@@ -2,318 +2,75 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Surpresa Especial</title>
+  <title>Resultados das Pedras</title>
   <style>
-    body {
-      margin: 0;
-      background: linear-gradient(to bottom, #ffd6e8, #ffcce0);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-    }
-    #gameCanvas {
-      background: #222;
-      border: 3px solid #fff;
-    }
-
-    /* Mensagem de cima */
-    #mensagem {
-      display: none;
-      font-size: 32px;
-      font-weight: bold;
-      color: #ff3399;
-      margin-top: 40px;
-      animation: fadeIn 2s ease-in-out forwards;
-    }
-
-    /* Mensagem de baixo */
-    #mensagemFinal {
-      display: none;
-      max-width: 90%;
-      margin: 40px auto 20px auto;
-      font-size: 28px;
-      line-height: 1.6;
-      text-align: center;
-      color: #ff3399;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Controles */
-    #controles {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: 60px 60px 60px;
-      grid-template-rows: 60px 60px 60px;
-      gap: 10px;
-      justify-content: center;
-      align-items: center;
-    }
-    .btn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: #444;
-      color: white;
-      font-size: 22px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 8px 0; font-size: 18px; display: flex; align-items: center; }
+    .hora { font-weight: bold; width: 60px; }
+    .pedra { margin: 0 8px; }
+    .resultado { margin-left: 12px; font-size: 20px; width: 40px; text-align: center; }
+    .botoes { margin-left: 20px; }
+    button { 
+      font-size: 20px; 
+      padding: 5px 12px; 
+      margin-left: 8px; 
       cursor: pointer;
-      user-select: none;
-      border: 2px solid #888;
-    }
-    .btn:active {
-      background: #666;
-    }
-
-    #botaoClique, #btnCorações {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 24px;
-      background: #ff3399;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      display: none;
-    }
-    #botaoClique:hover, #btnCorações:hover {
-      background: #ff66b3;
-    }
-
-    /* Corações subindo */
-    #heartsContainer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 999;
-    }
-
-    .heart {
-      position: absolute;
-      bottom: -20px; /* começa fora da tela */
-      animation: floatUp 6s linear forwards;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
-    }
-
-    /* Texto EU TE AMO */
-    #amorTexto {
-      display: none;
-      position: fixed;
-      top: 35%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #ff3399;
-      z-index: 1000;
-    }
-
-    #amorTexto h1 {
-      font-size: 70px;
-      margin: 0;
-    }
-
-    #amorTexto h3 {
-      font-size: 28px;
-      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="600" height="600"></canvas>
-
-  <div id="mensagem">
-    🎉 Parabéns! Você venceu o joguinho da cobrinha 🐍  
-    <br> E agora quero te dizer algo especial 💖  
-  </div>
-
-  <!-- Botões de controle -->
-  <div id="controles">
-    <div></div>
-    <div class="btn" onclick="setDirection('UP')">⬆️</div>
-    <div></div>
-    <div class="btn" onclick="setDirection('LEFT')">⬅️</div>
-    <div></div>
-    <div class="btn" onclick="setDirection('RIGHT')">➡️</div>
-    <div></div>
-    <div class="btn" onclick="setDirection('DOWN')">⬇️</div>
-    <div></div>
-  </div>
-
-  <!-- Botão Clique Aqui -->
-  <button id="botaoClique" onclick="showMessage()">💖 Clique aqui 💖</button>
-
-  <!-- Mensagem final especial -->
-  <div id="mensagemFinal"></div>
-
-  <!-- Botão corações -->
-  <button id="btnCorações">Clique aqui ❤️</button>
-
-  <!-- Área dos corações -->
-  <div id="heartsContainer"></div>
-
-  <!-- Texto de amor -->
-  <div id="amorTexto">
-    <h1>EU TE AMO</h1>
-    <h3>De Detroit para Jade</h3>
-  </div>
+  <h2>Resultados das pedras:</h2>
+  <ul id="lista"></ul>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+    let lista = document.getElementById("lista");
 
-    const box = 20;
-    let snake = [{ x: 15 * box, y: 15 * box }];
-    let direction = "RIGHT";
-    let food = {
-      x: Math.floor(Math.random() * (canvas.width / box)) * box,
-      y: Math.floor(Math.random() * (canvas.height / box)) * box
-    };
-    let score = 0;
+    function gerarSequencia() {
+      lista.innerHTML = "";
+      let agora = new Date();
+      let hora = agora.getHours();
+      let minutos = agora.getMinutes();
 
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      else if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      else if (event.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      else if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    });
+      for (let i = 1; i <= 50; i++) { // gera 50 linhas (pode aumentar)
+        let totalMinutos = minutos + i;
+        let novaHora = hora + Math.floor(totalMinutos / 60);
+        let novosMinutos = totalMinutos % 60;
 
-    function setDirection(dir) {
-      if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
-      else if (dir === "UP" && direction !== "DOWN") direction = "UP";
-      else if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
-      else if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
-    }
+        novaHora = novaHora % 24;
+        let horaFormatada = novaHora.toString().padStart(2, '0');
+        let minutosFormatados = novosMinutos.toString().padStart(2, '0');
 
-    function draw() {
-      ctx.fillStyle = "#222";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+        let pedraNumero = ((i - 1) % 12) + 1;
+        let pedraSimbolo = pedraNumero <= 8 ? "🔴⚪️" : "⚫️⚪️";
 
-      for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "lime" : "green";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeStyle = "#111";
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-      }
-
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
-
-      let snakeX = snake[0].x;
-      let snakeY = snake[0].y;
-
-      if (direction === "LEFT") snakeX -= box;
-      if (direction === "UP") snakeY -= box;
-      if (direction === "RIGHT") snakeX += box;
-      if (direction === "DOWN") snakeY += box;
-
-      if (snakeX < 0) snakeX = canvas.width - box;
-      else if (snakeX >= canvas.width) snakeX = 0;
-      if (snakeY < 0) snakeY = canvas.height - box;
-      else if (snakeY >= canvas.height) snakeY = 0;
-
-      if (snakeX === food.x && snakeY === food.y) {
-        score++;
-        food = {
-          x: Math.floor(Math.random() * (canvas.width / box)) * box,
-          y: Math.floor(Math.random() * (canvas.height / box)) * box
-        };
-      } else {
-        snake.pop();
-      }
-
-      let newHead = { x: snakeX, y: snakeY };
-
-      if (collision(newHead, snake)) {
-        clearInterval(game);
-        alert("Game Over! 😢");
-      }
-
-      snake.unshift(newHead);
-
-      if (score >= 4) {
-        clearInterval(game);
-        canvas.style.display = "none";
-        document.getElementById("mensagem").style.display = "block";
-        document.getElementById("botaoClique").style.display = "inline-block";
+        // cria o item
+        let li = document.createElement("li");
+        li.innerHTML = `
+          <span class="hora">${horaFormatada}:${minutosFormatados}</span> →
+          <span class="pedra">${pedraSimbolo}</span>
+          <span class="resultado">⏳</span>
+          <span class="botoes">
+            <button onclick="marcar(this,'acerto')">✅</button>
+            <button onclick="marcar(this,'erro')">❌</button>
+          </span>
+        `;
+        lista.appendChild(li);
       }
     }
 
-    function collision(head, array) {
-      for (let i = 0; i < array.length; i++) {
-        if (head.x === array[i].x && head.y === array[i].y) {
-          return true;
-        }
+    // Função para marcar os resultados
+    function marcar(botao, tipo) {
+      let resultadoSpan = botao.parentElement.parentElement.querySelector(".resultado");
+
+      if (tipo === "acerto") {
+        resultadoSpan.innerText = "✅";
+      } else if (tipo === "erro") {
+        resultadoSpan.innerText = "❌";
       }
-      return false;
     }
 
-    const mensagemTexto = "Sei que tô atrasado nos parabéns, mas nunca é tarde pra desejar felicidade a alguém que faz diferença na minha vida. ❤️\n\nMinha duo, desejo que cada dia seu seja cheio de conquistas e sorrisos, assim como você me faz sentir quando estamos juntos. 💕";
-
-    function showMessage() {
-      document.getElementById("botaoClique").style.display = "none";
-
-      const mensagemFinal = document.getElementById("mensagemFinal");
-      mensagemFinal.style.display = "block";
-      mensagemFinal.innerHTML = "";
-
-      let index = 0;
-
-      function type() {
-        if (index < mensagemTexto.length) {
-          const span = document.createElement("span");
-          span.textContent = mensagemTexto[index];
-          span.style.color = "#ff3399"; // apenas rosa
-          mensagemFinal.appendChild(span);
-          index++;
-          setTimeout(type, 40);
-        } else {
-          document.getElementById("btnCorações").style.display = "inline-block";
-        }
-      }
-      type();
-    }
-
-    function startHearts() {
-      const container = document.getElementById("heartsContainer");
-      const amorTexto = document.getElementById("amorTexto");
-      amorTexto.style.display = "block";
-
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.textContent = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = (20 + Math.random() * 40) + "px";
-        container.appendChild(heart);
-
-        setTimeout(() => {
-          heart.remove();
-        }, 6000);
-      }, 200);
-    }
-
-    document.getElementById("btnCorações").addEventListener("click", startHearts);
-
-    let game = setInterval(draw, 200);
+    gerarSequencia();
   </script>
 </body>
 </html>
