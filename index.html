@@ -4,15 +4,7 @@
   <meta charset="UTF-8">
   <title>Resultados das Pedras</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      margin: 0; 
-      padding: 0; 
-      background-color: #1E1E3F; /* Fundo azul escuro */
-      color: #fff; /* Texto branco */
-    }
-
-    /* Lista de resultados */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #1E1E3F; color: #fff; }
     ul { list-style: none; padding: 0; }
     li { margin: 16px 0; font-size: 28px; display: flex; align-items: center; }
     .hora { font-weight: bold; width: 90px; font-size: 28px; }
@@ -22,93 +14,29 @@
     button { font-size: 26px; padding: 10px 20px; margin-left: 12px; cursor: pointer; border-radius: 10px; }
 
     /* Tela de login */
-    #login { 
-      text-align:center; 
-      margin-top:60px; 
-      max-width: 450px; 
-      margin-left: auto; 
-      margin-right: auto; 
-    }
-    #login input { 
-      font-size: 26px; 
-      padding:14px; 
-      margin:12px 0; 
-      width: 100%; 
-      border-radius: 10px; 
-      border: 1px solid #999; 
-      background-color: #fff; 
-      color: #000; 
-    }
-    #login button { 
-      font-size: 28px; 
-      padding: 12px 24px; 
-      margin-top: 12px; 
-      cursor:pointer; 
-      border-radius: 10px; 
-      background-color: #FF4C4C; 
-      color: #fff; 
-      border: none;
-    }
+    #login { text-align:center; margin-top:60px; max-width: 450px; margin-left: auto; margin-right: auto; }
+    #login input { font-size: 26px; padding:14px; margin:12px 0; width: 100%; border-radius: 10px; border: 1px solid #999; background:#fff; color:#000; }
+    #login button { font-size: 28px; padding: 12px 24px; margin-top: 12px; cursor:pointer; border-radius: 10px; background:#FF4C4C; color: #fff; border: none; }
 
-    #preview { 
-      margin-top: 40px; 
-      text-align:center; 
-      display:inline-block; 
-      font-size: 26px; 
-      width: 100%;
-    }
+    #preview { margin-top: 40px; text-align:center; display:inline-block; font-size: 26px; width: 100%; }
     #preview h3 { font-size: 30px; color: #FFD700; }
     #preview li { font-size: 28px; margin: 14px 0; }
 
-    /* Descrição abaixo da pré-visualização */
-    #descricao {
-      font-size: 26px;
-      color: #FFD700;
-      margin-top: 24px;
-      max-width: 90%;
-      text-align: center;
-      line-height: 1.6;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    #descricao { font-size: 26px; color: #FFD700; margin-top: 24px; max-width: 90%; text-align: center; line-height: 1.6; margin-left: auto; margin-right: auto; }
 
-    /* Botão sair */
-    #sair { 
-      font-size: 24px; 
-      margin-bottom: 24px; 
-      padding: 10px 20px; 
-      cursor: pointer; 
-      border-radius: 10px; 
-      background-color: #FF4C4C; 
-      color: #fff; 
-      border: none;
-    }
+    #sair { font-size: 24px; margin-bottom: 24px; padding: 10px 20px; cursor: pointer; border-radius: 10px; background:#FF4C4C; color: #fff; border: none; }
 
-    /* Conteúdo protegido */
     #conteudo { padding: 24px; }
-
-    /* Relógio fixo no canto direito */
-    #relogio {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      font-size: 28px;
-      color: #FFD700;
-      font-weight: bold;
-      background-color: rgba(0,0,0,0.4);
-      padding: 10px 16px;
-      border-radius: 12px;
-      z-index: 1000;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      box-shadow: 0 0 10px #000;
-      display: none; /* Fica escondido antes do login */
-    }
+    #relogio { position: fixed; top: 20px; right: 20px; font-size: 28px; color: #FFD700; font-weight: bold; background: rgba(0,0,0,0.4); padding: 10px 16px; border-radius: 12px; z-index: 1000; box-shadow: 0 0 10px #000; display: none; }
+    #criarConta { display:none; margin-top:30px; background: rgba(0,0,0,0.3); padding:20px; border-radius:12px; }
+    #criarConta input { font-size:22px; padding:10px; margin:8px 0; width:100%; border-radius:8px; border:1px solid #999; }
+    #criarConta button { font-size:22px; padding:10px 20px; margin-top:12px; border-radius:8px; background:#28a745; color:#fff; border:none; cursor:pointer; }
+    #msgCriar { margin-top:8px; font-size:18px; }
+    #erro { font-size:20px; margin-top:10px; }
   </style>
 </head>
 <body>
 
-  <!-- Relógio fixo -->
   <div id="relogio"></div>
 
   <!-- Tela de Login -->
@@ -117,14 +45,21 @@
     <input type="text" id="usuario" placeholder="Usuário"><br>
     <input type="password" id="senha" placeholder="Senha"><br><br>
     <button onclick="fazerLogin()">Entrar</button>
-    <p id="erro" style="color:red; font-size: 22px;"></p>
+    <p id="erro" style="color:red;"></p>
+
+    <!-- Criar conta (só aparece após login mestre) -->
+    <div id="criarConta">
+      <h3>Criar conta permanente</h3>
+      <input type="text" id="novoUsuario" placeholder="Novo usuário">
+      <input type="password" id="novaSenha" placeholder="Nova senha">
+      <button onclick="criarConta()">Criar</button>
+      <p id="msgCriar"></p>
+    </div>
 
     <div id="preview">
       <h3>Pré-visualização de resultados:</h3>
       <ul id="previewLista"></ul>
-      <p id="descricao">
-        Descubra os resultados das pedras em tempo real, com informações claras, organizadas e sempre atualizadas. Ideal para quem não quer perder nenhum detalhe do jogo.
-      </p>
+      <p id="descricao">Descubra os resultados das pedras em tempo real, com informações claras, organizadas e sempre atualizadas.</p>
     </div>
   </div>
 
@@ -136,126 +71,283 @@
   </div>
 
   <script>
-    const USUARIO = "Detroit";
-    const SENHA = "Detroit11";
+    const USUARIO_MESTRE = "Detroit";
+    const SENHA_MESTRE = "Detroit11";
 
-    // Função para atualizar o relógio
-    function atualizarRelogio() {
-      const agora = new Date();
-      const h = String(agora.getHours()).padStart(2,'0');
-      const m = String(agora.getMinutes()).padStart(2,'0');
-      const s = String(agora.getSeconds()).padStart(2,'0');
-      document.getElementById("relogio").innerText = `${h}:${m}:${s}`;
+    // Tempo em ms
+    const EXPERIMENTO_DURATION = 3 * 60 * 1000; // 3 minutos de sessão
+    const EXPERIMENTO_COOLDOWN = 10 * 60 * 1000; // 10 minutos até poder relogar
+
+    // ---------- utilitários ----------
+    function obterUsuarios(){ 
+      try { return JSON.parse(localStorage.getItem("usuarios")||"{}"); }
+      catch(e){ return {}; }
     }
+    function salvarUsuarios(u){ localStorage.setItem("usuarios", JSON.stringify(u)); }
 
-    // Atualiza o relógio a cada segundo
-    setInterval(atualizarRelogio, 1000);
-
-    // Mostrar relógio depois do login
-    function mostrarRelogio() {
-      document.getElementById("relogio").style.display = "block";
-    }
-
-    window.onload = function() {
-      gerarPreview();
-      if(localStorage.getItem("logado") === "true"){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("conteudo").style.display = "block";
-        gerarSequencia();
-        mostrarRelogio();
-      }
-    }
-
-    function fazerLogin() {
-      let u = document.getElementById("usuario").value;
-      let s = document.getElementById("senha").value;
-      let erro = document.getElementById("erro");
-
-      if (u === USUARIO && s === SENHA) {
-        localStorage.setItem("logado", "true");
-        document.getElementById("login").style.display = "none";
-        document.getElementById("conteudo").style.display = "block";
-        gerarSequencia(); 
-        mostrarRelogio(); // exibe o relógio
+    // cria conta de experimento Detroit/Detroit0 se não existir (não sobrescreve conta já criada)
+    function garantirContaExperimento(){
+      const usuarios = obterUsuarios();
+      if(!usuarios["teste"] ){
+        usuarios["teste"] = {
+          password: "1234",
+          permanente: false,
+          temporary: true,
+          // propriedades que vamos usar:
+          cooldownUntil: 0 // timestamp ms até poder relogar
+        };
+        salvarUsuarios(usuarios);
       } else {
-        erro.innerText = "Usuário ou senha incorretos!";
+        // se já existir e for um objeto simples, garante a flag temporary se for Detroit0
+        // (não sobrescrevemos contas criadas manualmente)
+        const u = usuarios["teste"];
+        if(u && typeof u === "object"){
+          // se senha atual é Detroit0 e nenhuma flag definida, ajusta para temporary
+          if(u.password === "1234" && u.temporary !== true){
+            u.temporary = true;
+            u.permanente = !!u.permanente; // manter se já for permanente
+            u.cooldownUntil = u.cooldownUntil || 0;
+            salvarUsuarios(usuarios);
+          }
+        }
       }
     }
 
-    function sair() {
+    // ---------- criar conta permanente (liberado pelo mestre) ----------
+    function criarConta(){
+      let user = document.getElementById("novoUsuario").value.trim();
+      let pass = document.getElementById("novaSenha").value;
+      let msg = document.getElementById("msgCriar");
+      msg.style.color = "red";
+      if(!user || pass.length<4){ msg.innerText = "Usuário ou senha inválidos (mín 4 caracteres)."; return; }
+      let usuarios = obterUsuarios();
+      if(usuarios[user]){ msg.innerText = "Usuário já existe."; return; }
+      usuarios[user] = { password: pass, permanente: true, temporary: false, cooldownUntil: 0 };
+      salvarUsuarios(usuarios);
+      msg.style.color = "lightgreen";
+      msg.innerText = "Conta criada com sucesso!";
+      document.getElementById("novoUsuario").value="";
+      document.getElementById("novaSenha").value="";
+    }
+
+    // ---------- login ----------
+    function fazerLogin() {
+      let u = document.getElementById("usuario").value.trim();
+      let s = document.getElementById("senha").value.trim();
+      let erro = document.getElementById("erro");
+      erro.innerText = "";
+
+      // primeiro: login mestre libera criação de contas
+      if(u===USUARIO_MESTRE && s===SENHA_MESTRE){
+        document.getElementById("criarConta").style.display="block";
+        erro.style.color="lightgreen";
+        erro.innerText="Login mestre: agora você pode criar contas.";
+        return;
+      }
+
+      const usuarios = obterUsuarios();
+      const conta = usuarios[u];
+      if(!conta || conta.password !== s){
+        erro.style.color="red";
+        erro.innerText = "Usuário ou senha incorretos!";
+        return;
+      }
+
+      // se for conta temporária (experimento)
+      if(conta.temporary){
+        const now = Date.now();
+        if(conta.cooldownUntil && now < conta.cooldownUntil){
+          // ainda em cooldown
+          const falta = conta.cooldownUntil - now;
+          const mins = Math.floor(falta / 60000);
+          const secs = Math.floor((falta % 60000) / 1000);
+          erro.style.color="red";
+          erro.innerText = `Conta em cooldown. Tente novamente em ${mins}m ${secs}s.`;
+          return;
+        }
+
+        // permite login temporário: define sessão com expiração
+        localStorage.setItem("logado", u);
+        localStorage.setItem("sessionExpiresAt", String(Date.now() + EXPERIMENTO_DURATION));
+        // sinaliza que sessão é temporária
+        localStorage.setItem("sessionTemporary", "true");
+
+        // mostra área interna
+        entrarArea(u, conta.permanente ? "🔒" : " ⏳ (experimento)");
+        return;
+      }
+
+      // conta permanente normal
+      if(conta.permanente){
+        localStorage.setItem("logado", u);
+        localStorage.removeItem("sessionExpiresAt");
+        localStorage.setItem("sessionTemporary", "false");
+        entrarArea(u, "🔒");
+        return;
+      }
+
+      // fallback (caso não seja permanent/temporary)
+      localStorage.setItem("logado", u);
+      localStorage.removeItem("sessionExpiresAt");
+      localStorage.setItem("sessionTemporary", "false");
+      entrarArea(u, "");
+    }
+
+    function entrarArea(username, tag){
+      document.getElementById("login").style.display="none";
+      document.getElementById("conteudo").style.display="block";
+      document.getElementById("usuarioLogado")?.remove?.(); // apenas limpa se existir
+      // adiciona o indicador do usuário (simples)
+      const span = document.createElement("span");
+      span.id = "usuarioLogado";
+      span.style.fontWeight = "bold";
+      span.style.marginRight = "12px";
+      span.innerText = username + (tag ? " " + tag : "");
+      // coloca antes do botão sair
+      const sairBtn = document.getElementById("sair");
+      if(sairBtn && sairBtn.parentElement){
+        sairBtn.parentElement.insertBefore(span, sairBtn);
+      }
+      gerarSequencia();
+      mostrarRelogio();
+    }
+
+    // ---------- logout / sair ----------
+    function sair(){
+      const username = localStorage.getItem("logado");
+      // se sessão temporária e expirada manualmente pelo usuário, coloca cooldown também
+      if(localStorage.getItem("sessionTemporary") === "true"){
+        marcarCooldownPara(username);
+      }
       localStorage.removeItem("logado");
-      document.getElementById("conteudo").style.display = "none";
-      document.getElementById("login").style.display = "block";
-      document.getElementById("relogio").style.display = "none";
+      localStorage.removeItem("sessionExpiresAt");
+      localStorage.removeItem("sessionTemporary");
+      // remove username label
+      const span = document.getElementById("usuarioLogado");
+      if(span && span.parentElement) span.parentElement.removeChild(span);
+      document.getElementById("conteudo").style.display="none";
+      document.getElementById("login").style.display="block";
+      document.getElementById("relogio").style.display="none";
       gerarPreview();
     }
 
-    let lista = document.getElementById("lista");
-    function gerarSequencia() {
-      lista.innerHTML = "";
-      let agora = new Date();
-      let hora = agora.getHours();
-      let minutos = agora.getMinutes();
+    // se usuário tiver sessão temporária e expirar, registra cooldown
+    function marcarCooldownPara(username){
+      if(!username) return;
+      const usuarios = obterUsuarios();
+      if(usuarios[username] && usuarios[username].temporary){
+        usuarios[username].cooldownUntil = Date.now() + EXPERIMENTO_COOLDOWN;
+        salvarUsuarios(usuarios);
+      }
+    }
 
-      for (let i = 1; i <= 50; i++) { 
-        let totalMinutos = minutos + i;
-        let novaHora = hora + Math.floor(totalMinutos / 60);
-        let novosMinutos = totalMinutos % 60;
-        novaHora = novaHora % 24;
-        let horaFormatada = novaHora.toString().padStart(2, '0');
-        let minutosFormatados = novosMinutos.toString().padStart(2, '0');
+    // ---------- relógio ----------
+    function atualizarRelogio(){
+      let d=new Date();
+      let h=String(d.getHours()).padStart(2,'0');
+      let m=String(d.getMinutes()).padStart(2,'0');
+      let s=String(d.getSeconds()).padStart(2,'0');
+      document.getElementById("relogio").innerText=`${h}:${m}:${s}`;
+    }
+    setInterval(atualizarRelogio,1000);
+    function mostrarRelogio(){ document.getElementById("relogio").style.display="block"; }
 
-        let pedraNumero = ((i - 1) % 12) + 1;
-        let pedraSimbolo = pedraNumero <= 8 ? "🔴⚪️" : "⚫️⚪️";
+    // ---------- verificação de expiração de sessão (rodando a cada 1s) ----------
+    setInterval(() => {
+      const username = localStorage.getItem("logado");
+      const expiresAt = parseInt(localStorage.getItem("sessionExpiresAt") || "0", 10);
+      const isTemp = localStorage.getItem("sessionTemporary") === "true";
+      if(username && isTemp && expiresAt && Date.now() >= expiresAt){
+        // sessão temporária expirou -> força logout e marca cooldown
+        marcarCooldownPara(username);
+        alert("⏳ Sessão de experimento expirada. Faça login novamente quando o cooldown terminar.");
+        // limpa sessão
+        localStorage.removeItem("logado");
+        localStorage.removeItem("sessionExpiresAt");
+        localStorage.removeItem("sessionTemporary");
+        // atualiza UI
+        const span = document.getElementById("usuarioLogado");
+        if(span && span.parentElement) span.parentElement.removeChild(span);
+        document.getElementById("conteudo").style.display="none";
+        document.getElementById("login").style.display="block";
+        document.getElementById("relogio").style.display="none";
+        gerarPreview();
+      }
+    }, 1000);
 
-        let li = document.createElement("li");
-        li.innerHTML = `
-          <span class="hora">${horaFormatada}:${minutosFormatados}</span> →
-          <span class="pedra">${pedraSimbolo}</span>
+    // ---------- restauração ao carregar a página ----------
+    window.onload = function(){
+      garantirContaExperimento(); // garante a conta Detroit/Detroit0
+      gerarPreview();
+      let logado = localStorage.getItem("logado");
+      if(logado){
+        const usuarios = obterUsuarios();
+        const conta = usuarios[logado];
+        const isTemp = localStorage.getItem("sessionTemporary") === "true";
+        if(isTemp){
+          // se ainda dentro do tempo de sessão, restaura; se já expirou, será tratada pelo interval acima logo em seguida
+          const expiresAt = parseInt(localStorage.getItem("sessionExpiresAt") || "0", 10);
+          if(expiresAt && Date.now() < expiresAt){
+            entrarArea(logado, " ⏳ (experimento)");
+          } else {
+            // sessão já expirada -> limpa
+            localStorage.removeItem("logado");
+            localStorage.removeItem("sessionExpiresAt");
+            localStorage.removeItem("sessionTemporary");
+          }
+        } else {
+          // permanente ou não temporário
+          entrarArea(logado, (conta && conta.permanente) ? "🔒" : "");
+        }
+      }
+    }
+
+    // ---------- sequência e preview (mesmo comportamento anterior) ----------
+    let lista=document.getElementById("lista");
+    function gerarSequencia(){
+      lista.innerHTML="";
+      let agora=new Date(); let hora=agora.getHours(); let minutos=agora.getMinutes();
+      for(let i=1;i<=50;i++){
+        let total=minutos+i;
+        let h=hora+Math.floor(total/60);
+        let m=total%60;
+        h=h%24;
+        let hf=String(h).padStart(2,'0');
+        let mf=String(m).padStart(2,'0');
+        let pedraNum=((i-1)%12)+1;
+        let pedra=pedraNum<=8?"🔴⚪️":"⚫️⚪️";
+        let li=document.createElement("li");
+        li.innerHTML=`<span class="hora">${hf}:${mf}</span> → <span class="pedra">${pedra}</span>
           <span class="resultado">⏳</span>
-          <span class="botoes">
-            <button onclick="marcar(this,'acerto')">✅</button>
-            <button onclick="marcar(this,'erro')">❌</button>
-          </span>
-        `;
+          <span class="botoes"><button onclick="marcar(this,'✅')">✅</button><button onclick="marcar(this,'❌')">❌</button></span>`;
         lista.appendChild(li);
       }
     }
 
-    function gerarPreview() {
-      let previewLista = document.getElementById("previewLista");
-      previewLista.innerHTML = "";
-      let agora = new Date();
-      let hora = agora.getHours();
-      let minutos = agora.getMinutes();
-      let intervalos = [15, 25, 35, 45];
-
-      intervalos.forEach((inc, index) => {
-        let totalMinutos = minutos + inc;
-        let novaHora = hora + Math.floor(totalMinutos / 60);
-        let novosMinutos = totalMinutos % 60;
-        novaHora = novaHora % 24;
-
-        let horaFormatada = novaHora.toString().padStart(2, '0');
-        let minutosFormatados = novosMinutos.toString().padStart(2, '0');
-
-        let pedraNumero = ((index) % 12) + 1;
-        let pedraSimbolo = pedraNumero <= 8 ? "🔴⚪️" : "⚫️⚪️";
-
-        let li = document.createElement("li");
-        li.innerHTML = `
-          <span class="hora">${horaFormatada}:${minutosFormatados}</span> →
-          <span class="pedra">${pedraSimbolo}</span>
-          <span class="resultado">⏳</span>
-        `;
+    function gerarPreview(){
+      let previewLista=document.getElementById("previewLista");
+      previewLista.innerHTML="";
+      let agora=new Date(); let hora=agora.getHours(); let minutos=agora.getMinutes();
+      let intervalos=[15,25,35,45];
+      intervalos.forEach((inc,idx)=>{
+        let total=minutos+inc;
+        let h=hora+Math.floor(total/60);
+        let m=total%60;
+        h=h%24;
+        let hf=String(h).padStart(2,'0');
+        let mf=String(m).padStart(2,'0');
+        let pedraNum=((idx)%12)+1;
+        let pedra=pedraNum<=8?"🔴⚪️":"⚫️⚪️";
+        let li=document.createElement("li");
+        li.innerHTML=`<span class="hora">${hf}:${mf}</span> → <span class="pedra">${pedra}</span> <span class="resultado">⏳</span>`;
         previewLista.appendChild(li);
       });
     }
 
-    function marcar(botao, tipo) {
-      let resultadoSpan = botao.parentElement.parentElement.querySelector(".resultado");
-      resultadoSpan.innerText = tipo === "acerto" ? "✅" : "❌";
+    function marcar(btn,valor){
+      btn.parentElement.parentElement.querySelector(".resultado").innerText=valor;
     }
+
   </script>
 </body>
 </html>
